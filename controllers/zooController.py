@@ -52,6 +52,9 @@ class ZooController:
         elif opcion == 9:
             self.vista.opcionNueve(sistema)
 
+        elif opcion == 10:
+            self.vista.opcionDiez()
+
     def aplicarFormatoTablaHabitats(self, habitats):
         datos = []
         for habitat in habitats:

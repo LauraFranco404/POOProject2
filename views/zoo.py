@@ -6,7 +6,7 @@ import models.alimento as alimentoModel
 import controllers.zooController as zooController
 import streamlit as st
 import pandas as pd
-
+import requests
 
 class Zoo:
     def __init__(self):
@@ -48,7 +48,8 @@ class Zoo:
             col1, col2 = st.columns(2)
             col1.header("Jugar con un animal")
             botonJugar = col1.button("Jugar con un animal", 9)
-            col2.header("Consulta en línea")
+            col2.header("Mira nuestras mascotas :)")
+            botonConsulta = col2.button("Acceder a esta opción", 10)
 
         if botonCrearHabitat:
             st.session_state["opcion"] = 1
@@ -68,6 +69,8 @@ class Zoo:
             st.session_state["opcion"] = 8
         elif botonJugar:
             st.session_state["opcion"] = 9
+        elif botonConsulta:
+            st.session_state["opcion"] = 10
 
         if "opcion" in st.session_state:
             self.controlador.ejecutarOpcion(sistema, st.session_state["opcion"])
@@ -221,7 +224,7 @@ class Zoo:
             id = st.number_input("ID del alimento:", min_value=1, step=1)
             nombreAl = st.text_input("Nombre del Alimento:")
             tipoAl = st.selectbox("Categoría del alimento", ("Carnívora", "Hervíbora", "Omnívora"))
-            botonAccion = st.button("Crear nuevo habitat")
+            botonAccion = st.button("Crear nuevo alimento")
 
         if botonAccion:
             nuevoAlimento = alimentoModel.Alimento(id, nombreAl, tipoAl)
@@ -329,7 +332,16 @@ class Zoo:
                         animalJugar.estaJugando = "Ha jugado"
                         st.success("¡El animal se está divirtiendo mucho!")
                         st.success("_He, He_")
-    def mostraMensajeError(self, mensaje):
-        st.error(mensaje)
+
+    def opcionDiez(self):
+        llamado = requests.get("https://dog.ceo/api/breeds/image/random")
+        datos = llamado.json()
+        dato = datos['message']
+        st.success("Jeje, aquí tiene una imagen que le alegrará el día :)")
+        st.markdown(f'''
+        <a href={dato}><button style="background-color:Green;">¡Perritos!</button></a>
+        ''',
+        unsafe_allow_html=True)
+        print(dato)
 
 
