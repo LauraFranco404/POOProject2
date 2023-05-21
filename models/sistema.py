@@ -42,7 +42,16 @@ class Sistema:
             habitat.mostrarHabitat()
 
     def agregarAlimentos(self, alimento):
-        self.alimentos.append(alimento)
+        flag = 1
+        for alimentoV in self.alimentos:
+            if alimentoV.id == alimento.id:
+                st.error("Parece que ya asignaste este id a otro alimento")
+                flag = 0
+        if flag == 1:
+            self.alimentos.append(alimento)
+            st.success("El alimento ha sido agregado exitosamente")
+        else:
+            st.error("Lo siento, el alimento no se pudo ingresar")
 
     def mostrarAlimentos(self):
         print("Listado de alimentos: ")

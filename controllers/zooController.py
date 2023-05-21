@@ -33,9 +33,24 @@ class ZooController:
             self.vista.listarAnimalesPorHabitat(sistema)
 
         elif opcion == 5:
-            nuevoAlimento = self.vista.opcionCinco()
+            try:
+                nuevoAlimento = self.vista.opcionCinco()
+                if nuevoAlimento:
+                    sistema.agregarAlimentos(nuevoAlimento)
+            except ValueError:
+                self.vista.mostrarMensajeError("Se presentó un error creando el alimento")
 
-            sistema.agregarAlimentos(nuevoAlimento)
+        elif opcion == 6:
+            self.vista.listarAlimentos(sistema)
+
+        elif opcion == 7:
+            self.vista.opcionSiete(sistema)
+
+        elif opcion == 8:
+            self.vista.opcionOcho(sistema)
+
+        elif opcion == 9:
+            self.vista.opcionNueve(sistema)
 
     def aplicarFormatoTablaHabitats(self, habitats):
         datos = []
@@ -53,4 +68,10 @@ class ZooController:
         datos = []
         for animal in habitat.animales:
             datos.append([animal.id, animal.nombre, animal.edad, animal.especie, animal.tipoA, animal.horasS, animal.tiempoJuego, animal.estadoSalud, animal.habitat, animal.estaJugando])
+        return datos
+
+    def aplicarFormatoTablaAlimentos(self, alimentos):
+        datos = []
+        for alimento in alimentos:
+            datos.append([alimento.id, alimento.nombre, alimento.tipoA])
         return datos

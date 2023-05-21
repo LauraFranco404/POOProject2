@@ -16,7 +16,6 @@ class Zoo:
     def mostrarMenu(self, sistema):
         st.title("Bienvenido al Zooológico RF")
 
-
         with st.container():
             col1, col2 = st.columns(2)
             col1.header("Crear un habitat")
@@ -33,10 +32,23 @@ class Zoo:
 
         with st.container():
             col1, col2 = st.columns(2)
-            col1.header("Agregar un animal al zoológico")
+            col1.header("Agregar un alimento al zoológico")
             botonAgregarAlimento = col1.button("Acceder a esta opción", 5)
-            col2.header("Alimentar a un animal de un habitat")
-            botonAlimentar = col2.button("Acceder a esta opción", 6)
+            col2.header("Mostrar alimentos en el zoológico")
+            botonMostrarAlimento = col2.button("Acceder a esta opción", 6)
+
+        with st.container():
+            col1, col2 = st.columns(2)
+            col1.header("Alimentar a un animal")
+            botonAlimentar = col1.button("Acceder a esta opción", 7)
+            col2.header("Llevar a dormir a un animal")
+            botonDormir = col2.button("Acceder a esta opción", 8)
+
+        with st.container():
+            col1, col2 = st.columns(2)
+            col1.header("Jugar con un animal")
+            botonJugar = col1.button("Jugar con un animal", 9)
+            col2.header("Consulta en línea")
 
         if botonCrearHabitat:
             st.session_state["opcion"] = 1
@@ -48,8 +60,14 @@ class Zoo:
             st.session_state["opcion"] = 4
         elif botonAgregarAlimento:
             st.session_state["opcion"] = 5
-        elif botonAlimentar:
+        elif botonMostrarAlimento:
             st.session_state["opcion"] = 6
+        elif botonAlimentar:
+            st.session_state["opcion"] = 7
+        elif botonDormir:
+            st.session_state["opcion"] = 8
+        elif botonJugar:
+            st.session_state["opcion"] = 9
 
         if "opcion" in st.session_state:
             self.controlador.ejecutarOpcion(sistema, st.session_state["opcion"])
@@ -191,32 +209,127 @@ class Zoo:
             if animal.id == id:
                 return animal
 
-    def opcionCinco(self, id):
-        nombreAl = input("Ingrese el alimento del animal")
-        tipoAl = input("Ingrese la categoría a la que pertenece el alimento")
-        nuevoAlimento = alimentoModel.Alimento(id, nombreAl, tipoAl)
-        print("El alimento", nuevoAlimento.nombre, "ha sido creado exitosamente")
-        return nuevoAlimento
+    def accederAlimento(self, id, alimentos):
+        for alimento in alimentos:
+            if alimento.id  == id:
+                return alimento
 
-    def opcionSeis(self, sistema):
-        sistema.mostarHabitats()
-        idH = int(input("Seleccione el id del habitat en el que se encuentra el animal que desea alimentar:"))
-        habitatIngreso = sistema.accederAHabitat(idH)
-        if len(habitatIngreso.animales) > 0:
-            idA = int(input("Seleccione el id del animal que desea alimentar:"))
-            animalAlimentar = sistema.accederAnimal(idA)
-            hayAlimento = sistema.hayAlimentosCategoria(habitatIngreso.tipoAH)
-            if hayAlimento:
-                sistema.mostrarAlimentosPorCategoria(habitatIngreso.tipoAH)
-                idAl = int(input("Seleccione un id de alimento para alimentar al animal"))
-                alimento = sistema.accederAlimento(idAl)
-                if alimento.tipoA == habitatIngreso.tipoAH:
-                    sistema.liberarAlimento(idAl)
-                    print("Ñomi, has alimentado a", animalAlimentar.nombre, "con", alimento.nombre)
-                else:
-                    print("Lo siento, esto no corresponde a su dieta")
+    def opcionCinco(self):
+        st.divider()
+        with st.container():
+            st.subheader("Formulario para crear un nuevo aliemnto")
+            id = st.number_input("ID del alimento:", min_value=1, step=1)
+            nombreAl = st.text_input("Nombre del Alimento:")
+            tipoAl = st.selectbox("Categoría del alimento", ("Carnívora", "Hervíbora", "Omnívora"))
+            botonAccion = st.button("Crear nuevo habitat")
+
+        if botonAccion:
+            nuevoAlimento = alimentoModel.Alimento(id, nombreAl, tipoAl)
+            print("El alimento ha sido creado exitosamente")
+            return nuevoAlimento
+
+    def listarAlimentos(self, sistema):
+        st.divider()
+        with st.container():
+            st.subheader("Listado de alimentos disponibles")
+            if len(sistema.alimentos) == 0:
+                st.error("No hay alimentos para mostrar")
             else:
-                print("Lo siento, aún no tienes alimentos de esta categoría :c")
+                datos = pd.DataFrame(
+                    self.controlador.aplicarFormatoTablaAlimentos(sistema.alimentos),
+                    columns=["ID del alimento", "Nombre del alimento", "Categoría del alimento"]
+                )
+                st.table(datos)
 
+    def opcionSiete(self, sistema):
+        st.divider()
+        with st.container():
+            st.subheader("Formulario para alimentar a un animal")
+            if(len(sistema.habitats)) == 0 and (len(sistema.alimentos) == 0):
+                st.error("Lo siento, parece que aún no hay hábitats ni alimentos disponibles en el zoológico")
+            elif len(sistema.alimentos) == 0:
+                st.error("Lo siento, parece que aún no hay alimentos disponibles")
+            else:
+                opcionesA = []
+                opcionesAl = []
+                for habitat in sistema.habitats:
+                    idHabitat = habitat.id
+                    habitatIngreso = self.obtenerInformacionHabitat(idHabitat, sistema.habitats)
+                    if len(habitatIngreso.animales) > 0:
+                        for animal in habitatIngreso.animales:
+                            opcionesA.append([animal.id, animal.nombre, animal.habitat, animal.tipoA, habitatIngreso.id])
+                idA = st.selectbox("Animal al que desea alimentar", opcionesA)
+                nHabitatIngreso = self.obtenerInformacionHabitat(idA[4], sistema.habitats)
+                animalAlimentar = self.accederAnimal(idA[0], nHabitatIngreso.animales)
+                for alimento in sistema.alimentos:
+                    opcionesAl.append([alimento.id, alimento.nombre, alimento.tipoA])
+                idAl = st.selectbox("Alimento que desea ofrecer al animal", opcionesAl)
+                idALimento = alimento.id
+                alimentoDar = self.accederAlimento(idALimento, sistema.alimentos)
+                botonAccion = st.button("Alimentar animal")
+                if botonAccion:
+                    if animalAlimentar.tipoA == alimentoDar.tipoA:
+                        sistema.liberarAlimento(idALimento)
+                        st.success("Ha alimentado al animal")
+                    else:
+                        st.error("Lo siento, al parecer no puedes hacer eso")
+
+    def opcionOcho(self, sistema):
+        st.divider()
+        with st.container():
+            st.subheader("Formulario para llevar a domir a un animal")
+            if len(sistema.habitats) == 0:
+                st.error("Lo siento, parece que aún no hay hábitats ni alimentos disponibles en el zoológico")
+            else:
+                opcionesA = []
+                for habitat in sistema.habitats:
+                    idHabitat = habitat.id
+                    habitatIngreso = self.obtenerInformacionHabitat(idHabitat, sistema.habitats)
+                    if len(habitatIngreso.animales) > 0:
+                        for animal in habitatIngreso.animales:
+                            opcionesA.append([animal.id, animal.nombre, animal.habitat, animal.horasS, animal.haDormido, habitatIngreso.id])
+                idA = st.selectbox("Animal al que desea llevar a dormir", opcionesA)
+                nHabitatIngreso = self.obtenerInformacionHabitat(idA[5], sistema.habitats)
+                animalDormir = self.accederAnimal(idA[0], nHabitatIngreso.animales)
+                horasDormir = st.number_input("Horas que desea llevar al animal a dormir:", min_value=0, max_value=20, step=1)
+                botonAccion = st.button("LLevar a dormir al animal")
+                if botonAccion:
+                    if animalDormir.haDormido == "Ha dormido":
+                        st.error("Lo siento, este animal ya ha dormido")
+                    elif animalDormir.horasS < horasDormir:
+                        st.error("Lo siento, el animal no puede dormir tanto")
+                    elif animalDormir.horasS > horasDormir:
+                        st.error("Lo siento, el animal no puede dormir tan poco")
+                    else:
+                        animalDormir.haDormido = "Ha dormido"
+                        st.success("El animal se ha ido a dormir:")
+                        st.success("_Zzzz_")
+    def opcionNueve(self, sistema):
+        st.divider()
+        with st.container():
+            st.subheader("Formulario para llevar a domir a un animal")
+            if len(sistema.habitats) == 0:
+                st.error("Lo siento, parece que aún no hay hábitats ni alimentos disponibles en el zoológico")
+            else:
+                opcionesA = []
+                for habitat in sistema.habitats:
+                    idHabitat = habitat.id
+                    habitatIngreso = self.obtenerInformacionHabitat(idHabitat, sistema.habitats)
+                    if len(habitatIngreso.animales) > 0:
+                        for animal in habitatIngreso.animales:
+                            opcionesA.append([animal.id, animal.nombre, animal.habitat, animal.horasS, animal.estaJugando, habitatIngreso.id])
+                idA = st.selectbox("Animal al que desea sacar a jugar", opcionesA)
+                nHabitatIngreso = self.obtenerInformacionHabitat(idA[5], sistema.habitats)
+                animalJugar = self.accederAnimal(idA[0], nHabitatIngreso.animales)
+                botonAccion = st.button("Llevar a jugar")
+                if botonAccion:
+                    if animalJugar.estaJugando == "Ha jugado":
+                        st.error("Lo siento, este animal ya ha jugado")
+                    else:
+                        animalJugar.estaJugando = "Ha jugado"
+                        st.success("¡El animal se está divirtiendo mucho!")
+                        st.success("_He, He_")
     def mostraMensajeError(self, mensaje):
         st.error(mensaje)
+
+
