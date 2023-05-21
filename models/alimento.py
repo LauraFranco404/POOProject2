@@ -3,6 +3,3 @@ class Alimento:
         self.id = id
         self.nombre = nombre
         self.tipoA = tipoA
-
-    def mostrarAlimento(self):
-        print("Alimento: ", self.id, self.nombre, self.tipoA)

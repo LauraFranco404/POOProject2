@@ -176,14 +176,14 @@ class Zoo:
                     opcionesA.append([animal.id, animal.nombre, animal.habitat, animal.tipoA])
 
                 idAn = st.selectbox("Animal que desea agregar a un habitat:", opcionesA)
-                idAnimal = animal.id
+                idAnimal = idAn[0]
                 animalSeleccionado = self.accederAnimal(idAnimal, sistema.animales)
 
                 for habitat in sistema.habitats:
                     opcionesH.append([habitat.id, habitat.nombreH, habitat.tipoAH])
 
                 idH = st.selectbox("Habitat al que desea ingresar el animal", opcionesH)
-                idHabitat = habitat.id
+                idHabitat = idH[0]
                 habitatIngreso = self.obtenerInformacionHabitat(idHabitat, sistema.habitats)
                 botonAccion = st.button("Agregar animal a habitat")
 
@@ -280,7 +280,7 @@ class Zoo:
     def opcionOcho(self, sistema):
         st.divider()
         with st.container():
-            st.subheader("Formulario para llevar a domir a un animal")
+            st.subheader("Formulario para llevar a dormir a un animal")
             if len(sistema.habitats) == 0:
                 st.error("Lo siento, parece que aún no hay hábitats ni alimentos disponibles en el zoológico")
             else:
@@ -310,7 +310,7 @@ class Zoo:
     def opcionNueve(self, sistema):
         st.divider()
         with st.container():
-            st.subheader("Formulario para llevar a domir a un animal")
+            st.subheader("Formulario para llevar a jugar a un animal")
             if len(sistema.habitats) == 0:
                 st.error("Lo siento, parece que aún no hay hábitats ni alimentos disponibles en el zoológico")
             else:

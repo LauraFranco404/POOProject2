@@ -7,28 +7,6 @@ class Habitat:
         self.disponibilidad = disponibilidad
         self.animales = []
 
-    def mostrarHabitat(self):
-        print(self.id, "Habitat", self.nombreH)
-        print("Temperatura:", self.temperaturaH)
-        print("Tipo de alimentación en el habitat:", self.tipoAH)
-        print("Disponibilidad para animales:", self.disponibilidad)
-        if len(self.animales) > 0:
-            print(self.listarAnimales())
-        else:
-            print("Aún no hay animales disponibles :c")
-
+#Esta función se encarga de tomar un objeto de tipo Animal e insertarlo a la lista de animales de un habitat
     def agregarAnimales(self, animal):
         self.animales.append(animal)
-
-    def listarAnimales(self):
-        print("Lista de animales: ")
-        for animal in self.animales:
-            animal.mostrarAnimal()
-
-    def accederAnimal(self, id):
-        for i, animal in enumerate(self.animales):
-            if animal.id == id:
-                return animal
-            else:
-                print("Lo siento, este id no pertenece a ningún animal")
-

@@ -11,6 +11,3 @@ class Animal:
         self.habitat = habitat
         self.estaJugando = "No ha jugado"
         self.haDormido = "No ha dormido"
-
-    def mostrarAnimal(self):
-        print("Animal: ", self.id, self.nombre, self.edad, self.especie, self.tipoA, self.horasS, self.tiempoJuego, self.estadoSalud, self. habitat, self.estaJugando)
