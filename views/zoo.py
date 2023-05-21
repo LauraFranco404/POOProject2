@@ -1,4 +1,3 @@
-import models.habitat
 import models.habitat as habitatModel
 import models.animal as animalModel
 import models.sistema as sistemaModel
@@ -8,11 +7,14 @@ import streamlit as st
 import pandas as pd
 import requests
 
+
 class Zoo:
     def __init__(self):
         self.sistema = sistemaModel.Sistema()
         self.controlador = zooController.ZooController(self.sistema, self)
 
+    # Esta opción modela los encabezados en streamlit y se encarga de darles formato y tomar la opción que salga de
+    # la selección de cada botón
     def mostrarMenu(self, sistema):
         st.title("Bienvenido al Zooológico RF")
 
@@ -75,6 +77,9 @@ class Zoo:
         if "opcion" in st.session_state:
             self.controlador.ejecutarOpcion(sistema, st.session_state["opcion"])
 
+    # Aquí se crea el formato que se mostrará en pantalla para pedir los datos al usuario
+    # y guardar la información que se le dará a la misma función
+    # para que cree un habitat y lo retorne para agregarlo finalmente en el sistema
     def opcionUno(self):
         st.divider()
         with st.container():
@@ -91,6 +96,9 @@ class Zoo:
             print("El habitat ha sido creado exitosamente")
             return nuevoHabitat
 
+    # Aquí se crea el formato que se mostrará en pantalla para pedir los datos al usuario
+    # y guardar la información que se le dará a la misma función
+    # para que cree un animal y lo retorne para agregarlo finalmente en el sistema
     def opcionDos(self):
         st.divider()
         with st.container():
@@ -110,6 +118,8 @@ class Zoo:
                 st.success("El animal ha sido ingresado exitosamente")
                 return nuevoAnimal
 
+    # Esta función se encarga de mostrar en un formato de tabla (con ayuda de la función en el controlador)
+    # la información de los habitats disponibles en el zoológico en ese momento
     def listarHabitats(self, sistema):
         st.divider()
         with st.container():
@@ -123,6 +133,8 @@ class Zoo:
                 )
                 st.table(datos)
 
+    # Esta función se encarga de mostrar en un formato de tabla (con ayuda de la función en el controlador)
+    # la información de los animales disponibles en el refugio del zoológico en ese momento
     def listarAnimalesLibres(self, sistema):
         st.divider()
         with st.container():
@@ -136,6 +148,8 @@ class Zoo:
                 )
                 st.table(datos)
 
+    # Esta función se encarga de mostrar en un formato de tabla (con ayuda de la función en el controlador)
+    # la información de los animales disponibles en cada uno de los habitats disponibles en el sistema
     def listarAnimalesPorHabitat(self, sistema):
         st.divider()
         if len(sistema.habitats) == 0:
@@ -149,12 +163,15 @@ class Zoo:
                 else:
                     with st.container():
                             datos = pd.DataFrame(
-                                self.controlador.aplicarFormatoTablaAnimalesHabitat(sistema, habitat),
+                                self.controlador.aplicarFormatoTablaAnimalesHabitat(habitat),
                                 columns=["ID del animal", "Nombre del animal", "Edad del animal", "Especie del animal", "Tipo de alimentación del animal", "Horas de sueño del animal", "Tiempo de juego del animal", "Estado de salud del animal", "Habitat del animal", "Ha jugado en el día"]
                             )
                             st.table(datos)
 
-
+    # Esta función se encarga de mirar si en el sistema hay habitats o animales en refugio, en casode haber ambos
+    # accederá al animal que se indique y al habitat al que se intente ingresar y realizará la comparación de
+    # dos variables: el tipo de alimentación y el nombre del habitat, para intentar ingresar al animal
+    # si hay disponibilidad
     def opcionTres(self, sistema):
         st.divider()
         with st.container():
@@ -200,23 +217,30 @@ class Zoo:
                     else:
                         st.error("Parece que la información no concuerda, no puedes hacer esto :c")
 
+    # Esta función se encargará de buscar en una lista de habitats un objeto cuyo identificador sea el id
+    # que se pasa por parámetro y luego lo retorna
     def obtenerInformacionHabitat(self, id, habitats):
         for habitat in habitats:
             if habitat.id == id:
                 return habitat
-            else:
-                print("error")
 
+    # Esta función se encargará de buscar en una lista de animales un objeto cuyo identificador sea el id
+    # que se pasa por parámetro y luego lo retorna
     def accederAnimal(self, id, animales):
         for animal in animales:
             if animal.id == id:
                 return animal
 
+    # Esta función se encargará de buscar en una lista de alimentos un objeto cuyo identificador sea el id
+    # que se pasa por parámetro y luego lo retorna
     def accederAlimento(self, id, alimentos):
         for alimento in alimentos:
             if alimento.id  == id:
                 return alimento
 
+    # Aquí se crea el formato que se mostrará en pantalla para pedir los datos al usuario
+    # y guardar la información que se le dará a la misma función
+    # para que cree un alimento y lo retorne para agregarlo finalmente en el sistema
     def opcionCinco(self):
         st.divider()
         with st.container():
@@ -231,6 +255,9 @@ class Zoo:
             print("El alimento ha sido creado exitosamente")
             return nuevoAlimento
 
+
+    # Esta función se encarga de mostrar en un formato de tabla (con ayuda de la función en el controlador)
+    # la información de los alimentos disponibles en el sistema
     def listarAlimentos(self, sistema):
         st.divider()
         with st.container():
@@ -244,6 +271,9 @@ class Zoo:
                 )
                 st.table(datos)
 
+    # Esta función se encarga de mostrar en una barra de selección todos los animales y en otra todos los alimentos
+    # disponibles en el sistema. Después de seleccionarlos, comparará si la categoría del alimento es la misma
+    # y entonces alimentará al animal
     def opcionSiete(self, sistema):
         st.divider()
         with st.container():
@@ -277,6 +307,10 @@ class Zoo:
                     else:
                         st.error("Lo siento, al parecer no puedes hacer eso")
 
+    # Esta función se encarga de mostrar en una barra de selección todos los animales disponibles en el sistema.
+    # Después de seleccionar un animal, presentará la opción de seleccionar las horas que se quiere que el animal duerma
+    # se compararán entonces estas horas y solo si son suficientes y si el animal no ha dormido, se cambiará su atributo
+    # de haDormido por "Ha dormido"
     def opcionOcho(self, sistema):
         st.divider()
         with st.container():
@@ -307,6 +341,11 @@ class Zoo:
                         animalDormir.haDormido = "Ha dormido"
                         st.success("El animal se ha ido a dormir:")
                         st.success("_Zzzz_")
+
+    # Esta función se encarga de mostrar en una barra de selección todos los animales disponibles en el sistema.
+    # Después de seleccionar un animal, presentará la opción de llevarlo a jugar
+    # se verá entonces si el animal ha jugado en el día y solo si el animal no ha jugado, se cambiará su atributo
+    # de estaJugando por "Ha jugado"
     def opcionNueve(self, sistema):
         st.divider()
         with st.container():
@@ -333,15 +372,13 @@ class Zoo:
                         st.success("¡El animal se está divirtiendo mucho!")
                         st.success("_He, He_")
 
+    # Esta función se encarga de traer información de una API que muestra imágenes aleatorias de perritos
     def opcionDiez(self):
         llamado = requests.get("https://dog.ceo/api/breeds/image/random")
         datos = llamado.json()
         dato = datos['message']
         st.success("Jeje, aquí tiene una imagen que le alegrará el día :)")
-        st.markdown(f'''
-        <a href={dato}><button style="background-color:Green;">¡Perritos!</button></a>
-        ''',
-        unsafe_allow_html=True)
+        st.markdown(f'''<a href={dato}><button style="background-color:Green;">¡Perritos!</button></a>''', unsafe_allow_html=True)
         print(dato)
 
 

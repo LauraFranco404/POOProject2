@@ -19,6 +19,7 @@ class Sistema:
             self.alimentos = []
             st.session_state["alimentos"] = []
 
+    # Esta función se encarga de tomar un objeto de tipo habitat e insertarlo a la lista de habitats en el sistema
     def agregarHabitats(self, habitat):
         flag = 1
         for habitatV in self.habitats:
@@ -35,6 +36,7 @@ class Sistema:
         else:
             st.error("Lo siento, el habitat no se pudo ingresar")
 
+    # Esta función se encarga de tomar un objeto de tipo Alimento e insertarlo a la lista de alimemtos en el sistema
     def agregarAlimentos(self, alimento):
         flag = 1
         for alimentoV in self.alimentos:
@@ -47,11 +49,14 @@ class Sistema:
         else:
             st.error("Lo siento, el alimento no se pudo ingresar")
 
+    # Esta función se encarga de acceder a un objeto de la lista de alimentos por su id y eliminarlo de la lista
     def liberarAlimento(self, id):
         for i, alimento in enumerate(self.alimentos):
             if alimento.id == id:
                 self.alimentos.pop(i)
 
+    # Esta función se encarga de tomar un objeto de tipo Animal e insertarlo a la lista de animales en el refugio
+    # del sistema
     def agregarAnimales(self, animal):
         flag = 1
         for animalV in self.animales:
@@ -64,6 +69,7 @@ class Sistema:
         else:
             st.error("Lo siento, el animal no se pudo ingresar")
 
+    # Esta función se encarga de acceder a un objeto de la lista de animales por medio de su id y eliminarlo de la lista
     def liberarAnimal(self, id):
         for i, animal in enumerate(self.animales):
             if animal.id == id:

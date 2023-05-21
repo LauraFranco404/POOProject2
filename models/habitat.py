@@ -7,6 +7,6 @@ class Habitat:
         self.disponibilidad = disponibilidad
         self.animales = []
 
-#Esta función se encarga de tomar un objeto de tipo Animal e insertarlo a la lista de animales de un habitat
+    # Esta función se encarga de tomar un objeto de tipo Animal e insertarlo a la lista de animales de un habitat
     def agregarAnimales(self, animal):
         self.animales.append(animal)
