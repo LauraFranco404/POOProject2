@@ -29,6 +29,8 @@ class ZooController:
 
         elif opcion == 4:
             self.vista.listarHabitats(sistema)
+            self.vista.listarAnimalesLibres(sistema)
+            self.vista.listarAnimalesPorHabitat(sistema)
 
         elif opcion == 5:
             nuevoAlimento = self.vista.opcionCinco()
@@ -39,4 +41,16 @@ class ZooController:
         datos = []
         for habitat in habitats:
             datos.append([habitat.id, habitat.nombreH, habitat.tipoAH, habitat.temperaturaH, habitat.disponibilidad])
-            return datos
+        return datos
+
+    def aplicarFormatoTablaAnimales(self, animales):
+        datos = []
+        for animal in animales:
+            datos.append([animal.id, animal.nombre, animal.edad, animal.especie, animal.tipoA, animal.horasS, animal.tiempoJuego, animal.estadoSalud, animal.habitat, animal.estaJugando])
+        return datos
+
+    def aplicarFormatoTablaAnimalesHabitat(self, sistema, habitat):
+        datos = []
+        for animal in habitat.animales:
+            datos.append([animal.id, animal.nombre, animal.edad, animal.especie, animal.tipoA, animal.horasS, animal.tiempoJuego, animal.estadoSalud, animal.habitat, animal.estaJugando])
+        return datos

@@ -19,26 +19,22 @@ class Sistema:
             self.alimentos = []
             st.session_state["alimentos"] = []
 
-
     def agregarHabitats(self, habitat):
+        flag = 1
         for habitatV in self.habitats:
             if habitatV.id == habitat.id:
                 st.error("Parece que ya asignaste este id a otro habitat")
-                return
+                flag = 0
             elif (habitatV.nombreH == habitat.nombreH) and (habitatV.tipoAH == habitat.tipoAH):
                 st.error("Parece que hay otro habitat del mismo tipo y con la misma alimentación")
-                return
-            else:
-                self.habitats.append(habitat)
-                st.session_state["habitats"] = self.habitats
-                print("El habitat ha sido agregado exitosamente")
+                flag = 0
+        if flag == 1:
+            self.habitats.append(habitat)
+            st.session_state["habitats"] = self.habitats
+            st.success("El habitat ha sido agregado exitosamente")
+        else:
+            st.error("Lo siento, el habitat no se pudo ingresar")
 
-    def accederAHabitat(self, id, habitats):
-        for habitat in habitats:
-            if habitat.id == id:
-                return habitat
-            else:
-                print("Lo siento, este id no pertenece a ningún habitat")
 
     def mostarHabitats(self):
         print("Listado de habitats: ")
@@ -81,8 +77,16 @@ class Sistema:
                 self.alimentos.pop(i)
 
     def agregarAnimales(self, animal):
-        self.animales.append(animal)
-        print("El animal ha sido agregado exitosamente")
+        flag = 1
+        for animalV in self.animales:
+            if animalV.id == animal.id:
+                st.error("Parece que ya asignaste este id a otro animal")
+                flag = 0
+        if flag == 1:
+            self.animales.append(animal)
+            st.success("El animal ha sido agregado exitosamente")
+        else:
+            st.error("Lo siento, el animal no se pudo ingresar")
 
     def mostrarAnimales(self):
         print("Listado de animales: ")

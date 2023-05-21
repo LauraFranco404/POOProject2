@@ -25,14 +25,10 @@ class Habitat:
         for animal in self.animales:
             animal.mostrarAnimal()
 
-    def liberarAnimal(self, id):
-        for i, animal in enumerate(self.animales):
-            if animal.id == id:
-                self.animales.pop(i)
-
     def accederAnimal(self, id):
         for i, animal in enumerate(self.animales):
             if animal.id == id:
                 return animal
             else:
                 print("Lo siento, este id no pertenece a ningún animal")
+

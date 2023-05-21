@@ -1,3 +1,4 @@
+import models.habitat
 import models.habitat as habitatModel
 import models.animal as animalModel
 import models.sistema as sistemaModel
@@ -66,7 +67,7 @@ class Zoo:
 
         if botonAccion:
             nuevoHabitat = habitatModel.Habitat(id, nombreH, temperaturaH, tipoAH, disponibilidad)
-            st.success("El habitat ha sido creado exitosamente")
+            print("El habitat ha sido creado exitosamente")
             return nuevoHabitat
 
     def opcionDos(self):
@@ -80,9 +81,7 @@ class Zoo:
             tipoA = st.selectbox("Tipo de alimentación del animal", ("Carnívora", "Hervíbora", "Omnívora"))
             horasS = st.number_input("Horas de sueño del animal:", min_value=8, max_value=20, step=1)
             tiempoJuego = st.number_input("Tiempo de juego del animal:", min_value=1, max_value=4, step=1)
-            estadoSalud = st.checkbox("¿Animal sano?")
-            if estadoSalud:
-                st.write("El animal está sano c:")
+            estadoSalud = st.selectbox("Estado de salud del animal: ", ("Sano", "No sano"))
             habitatA = st.selectbox("Nombre del habitat al que pertenece el animal:", ("Acuático", "Desértico", "Polar", "Selvático"))
             botonAccion = st.button("Agregar nuevo animal")
             if botonAccion:
@@ -102,6 +101,38 @@ class Zoo:
                     columns=["ID del habitat", "Nombre del habitat", "Tipo de alimentación en el habitat", "Temperatura del habitat", "disponibilidad"]
                 )
                 st.table(datos)
+
+    def listarAnimalesLibres(self, sistema):
+        st.divider()
+        with st.container():
+            st.subheader("Listado de animales en refugio")
+            if len(sistema.animales) == 0:
+                st.error("No hay animales para mostrar")
+            else:
+                datos = pd.DataFrame(
+                    self.controlador.aplicarFormatoTablaAnimales(sistema.animales),
+                    columns=["ID del animal", "Nombre del animal", "Edad del animal", "Especie del animal", "Tipo de alimentación del animal", "Horas de sueño del animal", "Tiempo de juego del animal", "Estado de salud del animal", "Habitat del animal", "Ha jugado en el día"]
+                )
+                st.table(datos)
+
+    def listarAnimalesPorHabitat(self, sistema):
+        st.divider()
+        if len(sistema.habitats) == 0:
+            st.error("No hay habitats para mostrar")
+        else:
+            st.subheader("Listado de animales disponibles en el habitat"),
+            for habitat in sistema.habitats:
+                st.subheader(habitat.nombreH)
+                if len(habitat.animales) == 0:
+                    st.error("No hay animales en este habitat aún")
+                else:
+                    with st.container():
+                            datos = pd.DataFrame(
+                                self.controlador.aplicarFormatoTablaAnimalesHabitat(sistema, habitat),
+                                columns=["ID del animal", "Nombre del animal", "Edad del animal", "Especie del animal", "Tipo de alimentación del animal", "Horas de sueño del animal", "Tiempo de juego del animal", "Estado de salud del animal", "Habitat del animal", "Ha jugado en el día"]
+                            )
+                            st.table(datos)
+
 
     def opcionTres(self, sistema):
         st.divider()
@@ -134,13 +165,19 @@ class Zoo:
                 idHabitat = habitat.id
                 habitatIngreso = self.obtenerInformacionHabitat(idHabitat, sistema.habitats)
                 botonAccion = st.button("Agregar animal a habitat")
+
                 if botonAccion:
-                    if (animalSeleccionado.tipoA == habitatIngreso.tipoAH) & (animalSeleccionado.habitat == habitatIngreso.nombreH):
-                        sistema.liberarAnimal(idAnimal)
-                        habitatIngreso.agregarAnimales(animalSeleccionado)
-                        st.success("El animal fue ingresado al habitat correctamente")
+
+                    if (animalSeleccionado.tipoA == habitatIngreso.tipoAH) and (animalSeleccionado.habitat == habitatIngreso.nombreH):
+                        if habitatIngreso.disponibilidad > 0:
+                            sistema.liberarAnimal(idAnimal)
+                            habitatIngreso.agregarAnimales(animalSeleccionado)
+                            habitatIngreso.disponibilidad -= 1
+                            st.success("El animal fue ingresado al habitat correctamente")
+                        else:
+                            st.error("Lo siento, no caben más animalitos en el habitat")
                     else:
-                        st.error("Parece que el tipo de alimentación no es la misma, no puedes hacer esto :c")
+                        st.error("Parece que la información no concuerda, no puedes hacer esto :c")
 
     def obtenerInformacionHabitat(self, id, habitats):
         for habitat in habitats:
