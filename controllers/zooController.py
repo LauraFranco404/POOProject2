@@ -1,29 +1,42 @@
+import streamlit
+
+
 class ZooController:
 
     def __init__(self, modelo, vista):
         self.modelo = modelo
         self.vista = vista
 
-    def ejecutarOpcion(self, sistema, opcion, idH, idAn, idAl):
+    def ejecutarOpcion(self, sistema, opcion):
         if opcion == 1:
-            nuevoHabitat = self.vista.opcionUno(idH)
-            sistema.agregarHabitats(nuevoHabitat)
-            idH += 1
+            try:
+                nuevoHabitat = self.vista.opcionUno()
+                if nuevoHabitat:
+                    sistema.agregarHabitats(nuevoHabitat)
+            except ValueError:
+                self.vista.mostrarMensajeError("Se presentó un error creando el hábitat")
 
         elif opcion == 2:
-            nuevoAnimal = self.vista.opcionDos(idAn)
-            sistema.agregarAnimales(nuevoAnimal)
-            idAn += 1
+            try:
+                nuevoAnimal = self.vista.opcionDos()
+                if nuevoAnimal:
+                    sistema.agregarAnimales(nuevoAnimal)
+            except ValueError:
+                self.vista.mostrarMensajeError("Se presentó un error creando el animal")
 
         elif opcion == 3:
             self.vista.opcionTres(sistema)
 
         elif opcion == 4:
-            sistema.mostarHabitats()
+            self.vista.listarHabitats(sistema)
 
         elif opcion == 5:
-            nuevoAlimento = self.vista.opcionCinco(idAl)
+            nuevoAlimento = self.vista.opcionCinco()
 
             sistema.agregarAlimentos(nuevoAlimento)
-            idAl += 1
 
+    def aplicarFormatoTablaHabitats(self, habitats):
+        datos = []
+        for habitat in habitats:
+            datos.append([habitat.id, habitat.nombreH, habitat.tipoAH, habitat.temperaturaH, habitat.disponibilidad])
+            return datos

@@ -1,16 +1,40 @@
+import streamlit as st
+
+
 class Sistema:
     def __init__(self):
-        self.habitats = []
-        self.animales = []
-        self.alimentos = []
+        if "habitats" in st.session_state:
+            self.habitats = st.session_state["habitats"]
+        elif "habitats" not in st.session_state:
+            self.habitats = []
+            st.session_state["habitats"] = []
+        if "animales" in st.session_state:
+            self.animales = st.session_state["animales"]
+        elif "animales" not in st.session_state:
+            self.animales = []
+            st.session_state["animales"] = []
+        if "alimentos" in st.session_state:
+            self.alimentos = st.session_state["alimentos"]
+        elif "alimentos" not in st.session_state:
+            self.alimentos = []
+            st.session_state["alimentos"] = []
 
 
     def agregarHabitats(self, habitat):
-        self.habitats.append(habitat)
-        print("El habitat ", habitat.nombreH, " ha sido agregado exitosamente")
+        for habitatV in self.habitats:
+            if habitatV.id == habitat.id:
+                st.error("Parece que ya asignaste este id a otro habitat")
+                return
+            elif (habitatV.nombreH == habitat.nombreH) and (habitatV.tipoAH == habitat.tipoAH):
+                st.error("Parece que hay otro habitat del mismo tipo y con la misma alimentación")
+                return
+            else:
+                self.habitats.append(habitat)
+                st.session_state["habitats"] = self.habitats
+                print("El habitat ha sido agregado exitosamente")
 
-    def accederAHabitat(self, id):
-        for i, habitat in enumerate(self.habitats):
+    def accederAHabitat(self, id, habitats):
+        for habitat in habitats:
             if habitat.id == id:
                 return habitat
             else:
@@ -58,6 +82,7 @@ class Sistema:
 
     def agregarAnimales(self, animal):
         self.animales.append(animal)
+        print("El animal ha sido agregado exitosamente")
 
     def mostrarAnimales(self):
         print("Listado de animales: ")
@@ -74,9 +99,9 @@ class Sistema:
             if animal.id == id:
                 self.animales.pop(i)
 
-    def accederAnimal(self, id):
-        for i, animal in enumerate(self.animales):
-            if animal.id == id:
-                return animal
-            else:
-                print("Lo siento, este id no pertenece a ningún animal")
+#    def accederAnimal(self, id):
+#        for i, animal in enumerate(self.animales):
+#            if animal.id == id:
+#                return animal
+#            else:
+#                print("Lo siento, este id no pertenece a ningún animal")
