@@ -99,3 +99,45 @@
     ![img_24.png](img_24.png)
 ***
 Ese es a grandes rasgos nuestro proyecto
+
+# Informe de autoevaluación
+
+# Laura Franco
+## _Problemas al hacer el proyecto_
+>Personalmente no considero que hubiese problemas como tal, pues la palabra es bastante pesada, pero algunas cosas por mejorar son por ejemplo la poca costumbre de migrar de un lenguaje a otro. Pues al menos por mi parte tenía muchas cosas de C++ guardadas en cuanto a código y me confundía ocasionalmente con los operadores, pero teniendo la ayuda de mi compañero y del mismo PyCharm, fue superable.
+
+## _¿Qué aprendimos?_
+>Aprendimos a usar creo que por primera vez algo que construyera interfaces así de bonitas para hacer una interacción con el usuario. Lo cual es bastante útil tanto para la universidad como para el trabajo en momentos futuros.
+
+## _¿Qué nos gustó?_
+>En lo personal, me pareció súper interesante streamlit, y siento que durante vacaciones estaré buscando un poco la manera de aprender un poco más de él y tal vez tratar de comenzar proyectos manejando esta plataforma. Pues aún queda mucho en la documentación que sé que servirá para muchas otras aplicaciones.
+
+## _¿Qué no nos gustó?_
+>No me gustó no tener todavía como la capacidad de dividir esos conocimientos en cuanto a formato del código y organización de este en un lenguaje diferente y sentí un poco frustración como ya lo mencioné porque sentía que, aunque sabía cómo hacer las cosas, tenía errores muy simples y eso me bajaba los ánimos.
+
+## _¿Qué hizo cada uno de los miembros?_
+>Con mi compañero fue un trabajo realmente muy interesante a mi forma de ver, porque todo lo que hicimos fue desde mi computador, dado a algunos problemas que él tuvo con el suyo, fue más fácil reunirnos por horas y trabajar y aportar de manera física al trabajo. Así que no puedo mencionar si hubo algo en específico que hiciera cada uno, pues siento que todo fue muy cooperativo en todas las partes del trabajo.
+
+## _¿Qué nota se pondrían de manera individual y a su compañero?_
+>Tanto de manera individual como para mi compañero, daría la misma nota; un 5.0, pues a pesar del reto que representó el proyecto para nosotros, lidiamos con él bastante bien e hicimos lo mejor que pudimos
+
+*** 
+# Jhon Ríos
+## _Problemas al hacer el proyecto_
+>Para mí fue un problema el no tener equipo, siento que nos retrasó un poco porque todo lo que avanzamos lo tuvimos que hacer estando juntos y aunque no fue una mala dinámica, sé que hubiésemos podido terminar el trabajo más rápido o de manera diferente.
+
+## _¿Qué aprendimos?_
+>Aprendimos realmente a trabajar en estos dos proyectos con las exigencias de un proyecto de programación real; la tensión del tiempo, delegar trabajo en equipo, comunicación y errores que debían solucionarse en poco tiempo porque además esta semana estuvo llena de trabajos.
+
+## _¿Qué nos gustó?_
+>Me gustó bastante el manejo de streamlit y de las API’s, me parece muy interesante y nos da como un abrebocas para lo que veremos en semestres siguientes.
+
+## _¿Qué no nos gustó?_
+>No me gustó mucho pasar de C++ a Python, sentí el cambio un poco brusco y cuando sentí que me había acostumbrado a C++ pasamos a Python y los primeros momentos fue un caos con mi compañera para recordar todo respecto a operadores y forma del código.
+
+## _¿Qué hizo cada uno de los miembros?_
+>Manejamos muy de la mano, pero siento que porté más o al menos tenía más para aportar a nivel de instrucciones de código de la parte interna del programa. Más relacionado a los bancos de datos y eso.
+
+## _¿Qué nota se pondrían de manera individualy a su compañero?_
+>Nos pondría un 5.0 fue a mi parecer un buen proyecto.
+ 
